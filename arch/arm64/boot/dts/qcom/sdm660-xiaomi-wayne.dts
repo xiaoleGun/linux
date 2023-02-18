@@ -2,6 +2,7 @@
 /*
  * Copyright (c) 2020, Alexey Minnekhanov <alexey.min@gmail.com>
  * Copyright (c) 2021, Dang Huynh <danct12@riseup.net>
+ * Copyright (c) 2023, xiaoleGun <1592501605@qq.com>
  */
 
 /dts-v1/;
@@ -16,8 +17,8 @@
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 
 / {
-	model = "Xiaomi A2";
-	compatible = "xiaomi,jasmine", "qcom,sdm660";
+	model = "Xiaomi 6X";
+	compatible = "xiaomi,wayne", "qcom,sdm660";
 	chassis-type = "handset";
 
 	aliases {
@@ -87,111 +88,6 @@
 	extcon_usb: extcon-usb {
 		compatible = "linux,extcon-usb-gpio";
 		id-gpio = <&tlmm 58 GPIO_ACTIVE_HIGH>;
-	};
-	
-	/* Add support of modem and Wi-Fi */
-	soc {
-		/*
-		 * We don't know origin of remoteproc
-		 * description now, it was provided on Github
-		 * by konradybcio/58ninges_labs
-		 */
-		remoteproc_mss: remoteproc@4080000 {
-			compatible = "qcom,msm8998-mss-pil";
-			reg = <0x04080000 0x100>, <0x04180000 0x40>;
-			reg-names = "qdsp6", "rmb";
-			status = "okay";
-
-			interrupts-extended =
-				<&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
-				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-			interrupt-names = "wdog", "fatal", "ready",
-					  "handover", "stop-ack",
-					  "shutdown-ack";
-
-			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-				 <&gcc GCC_BIMC_MSS_Q6_AXI_CLK>,
-				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-				 <&gcc GPLL0_OUT_MSSCC>,
-				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-				 <&gcc GCC_MSS_MNOC_BIMC_AXI_CLK>,
-				 <&rpmcc RPM_SMD_QDSS_CLK>,
-				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
-			clock-names = "iface", "bus", "mem", "gpll0_mss",
-				      "snoc_axi", "mnoc_axi", "qdss", "xo";
-
-			qcom,smem-states = <&modem_smp2p_out 0>;
-			qcom,smem-state-names = "stop";
-
-			resets = <&gcc GCC_MSS_RESTART>;
-			reset-names = "mss_restart";
-
-			qcom,halt-regs = <&tcsr_regs_1 0x23000 0x25000 0x24000>;
-
-			power-domains = <&rpmpd SDM660_VDDCX>,
-					<&rpmpd SDM660_VDDMX>;
-			power-domain-names = "cx", "mx";
-
-			/* firmware from device */
-			firmware-name = "mba.mbn", "modem.mdt";
-
-			/* modem regions */
-			mba {
-				memory-region = <&mba_region>;
-			};
-
-			mpss {
-				memory-region = <&mpss_region>;
-			};
-
-			glink-edge {
-				interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
-				label = "modem";
-				qcom,remote-pid = <1>;
-				mboxes = <&apcs_glb 15>;
-			};
-		};
-
-		wifi: wifi@18800000 {
-			/*
-			 * Generated from ICNSS - they have same
-			 * membase, clocks, iommus and interrupts
-			 * However, SMMU not working now :(
-			 */
-			compatible = "qcom,wcn3990-wifi"; /* common for all QCOMs */
-			reg = <0x18800000 0x800000>;
-			reg-names = "membase";
-			memory-region = <&wlan_msa_mem>;
-			clocks = <&rpmcc RPM_SMD_RF_CLK1_PIN>;
-			clock-names = "cxo_ref_clk_pin";
-			interrupts =
-				<GIC_SPI 413 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
-				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>;
-
-			iommus = <&anoc2_smmu 0x1a00>,
-				 <&anoc2_smmu 0x1a01>;
-			qcom,snoc-host-cap-8bit-quirk; /* unknown property */
-			status = "okay";
-
-			/* supplies are same with downstream */
-			vdd-1.8-xo-supply = <&vreg_l9a_1p8>;
-			vdd-1.3-rfa-supply = <&vreg_l6a_1p3>;
-			vdd-3.3-ch0-supply = <&vreg_l19a_3p3>;
-		};
 	};
 };
 

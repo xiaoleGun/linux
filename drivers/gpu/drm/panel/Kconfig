@@ -154,6 +154,15 @@ config DRM_PANEL_FEIYANG_FY07024DI26A30D
 	  Say Y if you want to enable support for panels based on the
 	  Feiyang FY07024DI26A30-D MIPI-DSI interface.
 
+config DRM_PANEL_HUAXING_NT36672
+ 	tristate "Huaxing NT36672"
+ 	depends on OF
+ 	depends on DRM_MIPI_DSI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  Say Y here if you want to enable support for Huaxing nt36672
+ 	  command mode panel
+
 config DRM_PANEL_ILITEK_IL9322
 	tristate "Ilitek ILI9322 320x240 QVGA panels"
 	depends on OF && SPI
@@ -222,6 +231,15 @@ config DRM_PANEL_JDI_R63452
 	help
 	  Say Y here if you want to enable support for the JDI R63452
 	  DSI command mode panel as found in Xiaomi Mi 5 Devices.
+
+config DRM_PANEL_JDI_NT36672
+ 	tristate "JDI NT36672 Full HD DSI panel"
+ 	depends on OF
+ 	depends on DRM_MIPI_DSI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  Say Y here if you want to enable support for Jdi nt36672
+ 	  command mode panel
 
 config DRM_PANEL_KHADAS_TS050
 	tristate "Khadas TS050 panel"
@@ -657,6 +675,15 @@ config DRM_PANEL_TDO_TL070WSH30
 	  panel module. The panel has a 1024×600 resolution and uses
 	  24 bit RGB per pixel. It provides a MIPI DSI interface to
 	  the host, a built-in LED backlight and touch controller.
+
+config DRM_PANEL_TIANMA_NT36672
+ 	tristate "Tianma NT36672"
+ 	depends on OF
+ 	depends on DRM_MIPI_DSI
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	help
+ 	  Say Y here if you want to enable support for Tianma nt36672
+ 	  command mode panel
 
 config DRM_PANEL_TPO_TD028TTEC1
 	tristate "Toppoly (TPO) TD028TTEC1 panel driver"

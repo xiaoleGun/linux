@@ -26,11 +26,20 @@
 	};
 
 	chosen {
-		#address-cells = <2>;
-		#size-cells = <2>;
-		ranges;
+		stdout-path = "framebuffer0";
 
-		stdout-path = "serial0:115200n8";
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+
+ 		framebuffer@9d400000 {
+ 			compatible = "simple-framebuffer";
+ 			reg = <0x0 0x9d400000 0x0 (1080 * 2160 * 4)>;
+ 			width = <1080>;
+ 			height = <2160>;
+ 			stride = <(1080 * 4)>;
+ 			format = "a8r8g8b8";
+ 		};
 
 	};
 
@@ -91,10 +100,6 @@
 	};
 };
 
-&blsp1_uart2 {
-	status = "okay";
-};
-
 &blsp_i2c1 {
 	status = "okay";
 	/* Novatek device tree node */
@@ -109,8 +114,12 @@
 		reset-gpios = <&tlmm 66 GPIO_ACTIVE_HIGH>;
 		touchscreen-size-x = <1080>;
 		touchscreen-size-y = <2160>;
-		status = "okay";
+        status = "okay";
 	};
+};
+
+&blsp1_uart2 {
+	status = "okay";
 };
 
 &dsi0 {
@@ -162,14 +171,6 @@
 	status = "okay";
 };
 
-&gpucc {
-	status = "okay";
-};
-
-&mmcc {
-	status = "okay";
-};
-
 &mmss_smmu {
 	status = "okay";
 };
@@ -184,23 +185,6 @@
 
 &lpass_smmu {
 	status = "okay";
-};
-
-&adreno_gpu {
-	status = "okay";
-	zap-shader {
-		memory-region = <&zap_shader_region>;
-		firmware-name = "qcom/a512_zap.mdt";
-	};
-};
-
-&adsp_pil {
-	firmware-name = "qcom/adsp.mdt";
-};
-
-&venus {
-	status = "okay";
-	firmware-name = "qcom/venus-4.4/venus.mdt";
 };
 
 &pm660l_gpios {

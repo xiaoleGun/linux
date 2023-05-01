@@ -234,7 +234,7 @@ static int nt36672_huaxing_probe(struct mipi_dsi_device *dsi)
 	return 0;
 }
 
-static void nt36672_huaxing_remove(struct mipi_dsi_device *dsi)
+static int nt36672_huaxing_remove(struct mipi_dsi_device *dsi)
 {
 	struct nt36672_huaxing *ctx = mipi_dsi_get_drvdata(dsi);
 	int ret;
@@ -245,7 +245,7 @@ static void nt36672_huaxing_remove(struct mipi_dsi_device *dsi)
 
 	drm_panel_remove(&ctx->panel);
 
-    return;
+    return 0;
 }
 
 static const struct of_device_id nt36672_huaxing_of_match[] = {
